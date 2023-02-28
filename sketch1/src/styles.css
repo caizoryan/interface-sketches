@@ -1,0 +1,112 @@
+* {
+  padding: 0;
+  margin: 0;
+  font-family: "Monument-Mono";
+}
+
+@font-face {
+  font-family: "Monument-Mono";
+  src: url("./ABC Monument Grotesk Mono/ABCMonumentGroteskMono-Light-Trial.woff")
+      format("woff"),
+    url("./ABC Monument Grotesk Mono/ABCMonumentGroteskMono-Light-Trial.woff2")
+      format("woff2");
+}
+
+.container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(20, 20, 20);
+  overflow-y: scroll;
+}
+
+.left {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: 40vw;
+  height: 105vh;
+  overflow-y: scroll;
+  transform: rotate(1deg);
+  background-color: white;
+  transition: all 200ms ease-in-out;
+}
+
+.right {
+  position: absolute;
+  background-color: white;
+  top: -10px;
+  right: 0;
+  width: 30vw;
+  height: 105vh;
+  overflow-y: scroll;
+  transform: rotate(1deg);
+  transition: all 200ms ease-in-out;
+}
+
+.programs {
+  border-top: 0.1px solid black;
+  padding-top: 20px;
+  position: absolute;
+  left: 100px;
+  bottom: 100px;
+  width: 30vw;
+  font-size: 20px;
+  transform: rotate(-1deg);
+}
+.circle {
+  width: 20px;
+  height: 20px;
+  margin: 0 5px;
+  background-color: black;
+  border-radius: 100px;
+  /* border: 2px solid black; */
+
+  transition: all 100ms ease-in-out;
+}
+.circle:hover {
+  background-color: rgb(252, 186, 3);
+}
+.close {
+  border-radius: 100px;
+  margin-left: auto;
+  margin-right: 30px;
+  font-family: sans-serif;
+  font-weight: 600;
+  font-size: 30px;
+}
+.program-span {
+  font-family: "Monument-Mono";
+}
+.program-span:hover {
+  background-color: black;
+  padding: 2px;
+  color: white;
+  cursor: pointer;
+}
+
+.menu {
+  background-color: white;
+  align-items: center;
+  transition: all 200ms ease-in-out;
+  position: absolute;
+  top: 2vw;
+  left: 70px;
+  width: 30vw;
+  height: 50px;
+  display: flex;
+}
+
+.node {
+  transition: width 200ms ease-in-out, height 100ms ease-out;
+  cursor: pointer;
+}
