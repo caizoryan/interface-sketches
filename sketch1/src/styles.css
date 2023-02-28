@@ -11,6 +11,13 @@
     url("./ABC Monument Grotesk Mono/ABCMonumentGroteskMono-Light-Trial.woff2")
       format("woff2");
 }
+@font-face {
+  font-family: "Monument-Text";
+  src: url("./ABC Monument Grotesk Mono/ABCMonumentGroteskMono-Regular-Trial.woff")
+      format("woff"),
+    url("./ABC Monument Grotesk Mono/ABCMonumentGroteskMono-Regular-Trial.woff2")
+      format("woff2");
+}
 
 .container {
   display: flex;
@@ -109,4 +116,33 @@
 .node {
   transition: width 200ms ease-in-out, height 100ms ease-out;
   cursor: pointer;
+}
+
+.name-wrapper {
+  position: absolute;
+  bottom: 100px;
+  left: 100px;
+  transform: rotate(-1deg);
+}
+
+.name-wrapper p {
+  font-family: "Monument-Text";
+  padding: 5px;
+}
+.name-wrapper p:hover {
+  background-color: rgb(200, 150, 50);
+  color: white;
+}
+.name-title {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  transform: rotate(-1deg);
+}
+.gallery {
+  margin: 2%;
+  display: flex;
+  overflow-y: scroll;
+  align-items: center;
+  height: 90%;
 }
