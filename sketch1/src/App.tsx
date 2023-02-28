@@ -1,9 +1,33 @@
-import { Switch, Match, Component, createSignal, For } from "solid-js";
+import {
+  Switch,
+  Match,
+  createMemo,
+  Component,
+  createSignal,
+  For,
+  createEffect,
+} from "solid-js";
+import Box from "./Box";
 import Node from "./Node";
 import { render } from "solid-js/web";
 import "./styles.css";
 
 const nodes = [];
+const studentNames = [
+  "Wolfgang Weingart",
+  "Claude Garamond",
+  "Jan Tschichold",
+  "William Golden",
+  "Jacqueline Casey",
+  "Cipe Pineles",
+  "Susan Kare",
+  "Abram Games",
+  "Armin Hofmann",
+  "Josef Muller-Brockmann",
+  "Seymour Chwast",
+  "Alexey Brodovitch",
+  "Herb Lubalin",
+];
 const programs = [
   "GRAPHIC DESIGN",
   "ILLUSTRATION",
@@ -36,20 +60,62 @@ function randomType() {
   else return "Project";
 }
 
-console.table(nodes);
+let [boxStyle, setBoxStyle] = createSignal({
+  top: "0vh",
+  right: "0",
+});
+
+let [compiled, setCompiled] = createSignal("");
 
 const App: Component = () => {
-  const [leftOpen, setLeftOpen] = createSignal(true);
+  const [open, setOpen] = createSignal(true);
   function togggleLeft() {
-    setLeftOpen(!leftOpen());
+    setOpen(!open());
   }
+
+  createEffect(() => {
+    if (open()) {
+      setBoxStyle((current) => {
+        console.log(current);
+        current.top = "0px";
+        return current;
+      });
+    } else {
+      setBoxStyle((current) => {
+        current.top = "90vh";
+        return current;
+      });
+    }
+
+    compileStyles();
+  });
+  function compileStyles() {
+    let style = ``;
+    for (const [key, value] of Object.entries(boxStyle())) {
+      style += `${key}:${value};`;
+    }
+    setCompiled(style);
+  }
+
+  function transformBox() {
+    console.log("something");
+    setBoxStyle((c) => {
+      c.width = "100px";
+      c.height = "20px";
+      c.right = "100px";
+      c.top = "400px";
+      return c;
+    });
+    compileStyles();
+  }
+
   return (
     <>
       <div class="container">
         <div class="back">
           <For each={nodes}>{(n) => <Node node={n}></Node>}</For>
         </div>
-        <div class="left" style={leftOpen() ? "left: -10px" : "top: 90vh;"}>
+        <div class="left" style={open() ? "left: -10px" : "top: 90vh;"}>
           <div class="menu">
             <div class="circle"></div>
             <div class="circle"></div>
@@ -58,8 +124,8 @@ const App: Component = () => {
             <div class="circle"></div>
             <span class="close" onClick={togggleLeft}>
               <Switch>
-                <Match when={leftOpen()}>&mdash;</Match>
-                <Match when={!leftOpen()}>+</Match>
+                <Match when={open()}>&mdash;</Match>
+                <Match when={!open()}>+</Match>
               </Switch>
             </span>
           </div>
@@ -69,7 +135,9 @@ const App: Component = () => {
             </For>
           </div>
         </div>
-        <div class="right" style={leftOpen() ? "right: 0" : "top: 90vh;"}></div>
+        <Box styles={compiled}>
+          <p onClick={transformBox}>hellow</p>
+        </Box>
       </div>
       <div class="student"></div>
     </>
