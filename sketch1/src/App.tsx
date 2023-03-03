@@ -64,7 +64,7 @@ const state = createMutable([
 ]);
 
 function compileCss(styles: Object) {
-  // add a camel case to kebab case converter
+  // TODO add a camel case to kebab case converter
   let swap = "";
   for (const [key, value] of Object.entries(styles)) {
     swap += `${key}: ${value};`;
