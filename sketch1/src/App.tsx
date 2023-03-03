@@ -11,6 +11,12 @@ import { render } from "solid-js/web";
 import { createMutable } from "solid-js/store";
 import "./styles.css";
 
+type Box = {
+  id: number;
+  styles: any;
+  children: any[];
+  active: Boolean;
+};
 // Ok so how am I going to do this
 // First create a box component,  it can be passed a signal that will take cake of its styling
 // It wil also have children in this signal, the children will also change and it will update in the box component
@@ -46,10 +52,9 @@ const Menu = () => {
   );
 };
 
-const state = createMutable([
+const state = createMutable<Box[]>([
   {
     id: 0,
-    name: "som,et",
     styles: {
       position: "fixed",
       top: "100px",
@@ -86,7 +91,9 @@ const Box: Component = (props: any) => {
           } else props.state.styles.left = "100px";
         }}
         style={compiledStyles() + "background-color: red"}
-      ></div>
+      >
+        {props.children}
+      </div>
     </>
   );
 };
@@ -102,7 +109,7 @@ function pleaseWork() {
 const App: Component = () => {
   return (
     <div class="container">
-      <Box state={state[0]}></Box>
+      <Box state={state[0]}>{state[0].children[0]}</Box>
       <button onClick={pleaseWork}>{state[0].name} see</button>
     </div>
   );
