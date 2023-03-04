@@ -1,54 +1,19 @@
-import { createSignal, For, createEffect, ParentComponent } from "solid-js";
+import {
+  createSignal,
+  Show,
+  For,
+  createEffect,
+  ParentComponent,
+} from "solid-js";
 import type { Component } from "solid-js/types";
 import { render } from "solid-js/web";
 import { createMutable } from "solid-js/store";
+import s from "./States";
 import "./styles.css";
-const s = {
-  state1: {
-    index: 0,
-    styles: {
-      top: "400px",
-      left: "400px",
-      width: "500px",
-      height: "200px",
-    },
-  },
-  state2: {
-    index: 0,
-    styles: {
-      top: "400px",
-      left: "0px",
-      width: "800px",
-      height: "100px",
-    },
-  },
-  state3: {
-    index: 0,
-    styles: {
-      top: "600px",
-      left: "10px",
-      width: "400px",
-      height: "300px",
-    },
-  },
-  state4: {
-    index: 0,
-    styles: {
-      top: "250px",
-      left: "700px",
-      width: "400px",
-      height: "800px",
-    },
-  },
-};
 
-type Box = {
-  id: number;
-  styles: Object;
-  children: any[];
-  active: Boolean;
-};
-
+// to test out reactivity
+const [some, setSome] = createSignal("Wowiee");
+// Fake children
 const ProgramList: Component<{ programs: (string | Function)[] }> = (props) => {
   console.log("ok");
   return (
@@ -60,13 +25,24 @@ const ProgramList: Component<{ programs: (string | Function)[] }> = (props) => {
 
 const Menu = () => {
   return (
-    <div style="padding: 10px; font-size: 20px">
+    <div style="padding: 10px; ">
       this is another Component, that I can change using states
     </div>
   );
 };
 
+type Styles = {
+  [key: string]: string;
+};
+type Box = {
+  id: number;
+  styles: Styles;
+  children?: any[];
+  active: Boolean;
+};
+
 type State = Box[];
+
 const state = createMutable<State>([
   {
     id: 0,
@@ -91,6 +67,7 @@ const state = createMutable<State>([
       top: "300px",
       left: "400px",
       width: "100px",
+      fontSize: "4px !important",
       height: "100px",
       color: "red",
       transition: "300ms ease-in-out all",
@@ -107,30 +84,42 @@ const Layout: Component<{ state: State }> = (props) => {
   return (
     <For each={props.state}>
       {(boxState) => (
-        <Box state={boxState}>
-          <For each={boxState.children}>{(child) => child}</For>
-        </Box>
+        <Show when={boxState.active}>
+          <Box state={boxState}>
+            <For each={boxState.children}>{(child) => child}</For>
+          </Box>
+        </Show>
       )}
     </For>
   );
 };
 
-function applyStates(index: number, styles: Object, children?: any[]) {
+function applyStates(index: number, styles: Styles, children?: any[]) {
   for (const [key, value] of Object.entries(styles)) {
-    if (value === "DELETE" && state[index].styles[key])
+    if (value === "RESET") state[index].styles = {};
+    else if (value === "DELETE" && state[index].styles[key])
       delete state[index].styles[key];
     else state[index].styles[key] = value;
   }
-
   if (children) state[index].children = children;
 }
 
 function styleToString(styles: Object) {
-  // TODO add a camel case to kebab case converter
-  // To add for example background-color
+  // helper function
+  const kebabize = (str: string) => {
+    return str
+      .split("")
+      .map((letter: string, idx: number) => {
+        return letter.toUpperCase() === letter
+          ? `${idx !== 0 ? "-" : ""}${letter.toLowerCase()}`
+          : letter;
+      })
+      .join("");
+  };
+
   let swap = "";
   for (const [key, value] of Object.entries(styles)) {
-    swap += `${key}: ${value};`;
+    swap += `${kebabize(key)}: ${value};`;
   }
   return swap;
 }
@@ -149,7 +138,6 @@ const Box: ParentComponent<{ state: Box }> = (props) => {
   );
 };
 
-const [some, setSome] = createSignal("Wowiee");
 const Buttons: Component = () => {
   return (
     <>
@@ -191,5 +179,4 @@ const App: Component = () => {
 };
 
 const root = document.getElementById("root");
-
 render(() => <App />, root!);
