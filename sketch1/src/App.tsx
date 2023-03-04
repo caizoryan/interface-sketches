@@ -1,18 +1,32 @@
 import {
   Switch,
   Match,
-  createMemo,
+  Show,
   Component,
+  ParentComponent,
   createSignal,
   For,
   createEffect,
 } from "solid-js";
-import Box from "./Box";
-import Node from "./Node";
+import { createMutable } from "solid-js/store";
+import Back from "./Back";
 import { render } from "solid-js/web";
 import "./styles.css";
 
-const nodes = [];
+// types
+type Styles = {
+  [key: string]: string;
+};
+type Box = {
+  id: number;
+  styles: Styles;
+  children?: any[];
+  active: Boolean;
+};
+
+type State = Box[];
+
+// annoying variables
 const studentNames = [
   "Wolfgang Weingart",
   "Hans Richter",
@@ -29,260 +43,291 @@ const studentNames = [
   "Alexey Brodovitch",
   "Herb Lubalin",
 ];
-const images = [
-  "https://d2w9rnfcy7mm78.cloudfront.net/20594360/original_6f947c4d106d489b3f20a4687e1befb0.png?1677479968?bc=0",
-  "https://d2w9rnfcy7mm78.cloudfront.net/20594355/original_d18415060f375cfcafe0e894bc5fc15c.png?1677479968?bc=0",
-  "https://d2w9rnfcy7mm78.cloudfront.net/20594352/original_86eab6625c535daa192a485470426278.png?1677479969?bc=0",
-  "https://d2w9rnfcy7mm78.cloudfront.net/20594357/original_9b14dc59621146adb5c96a54584ddaa0.png?1677479959?bc=0",
-  "https://d2w9rnfcy7mm78.cloudfront.net/20594365/original_ee39a8440a8f14b5c43ee3b5d636bc7e.png?1677479966?bc=0",
+const programs = ["CLICK", "ON", "ONE", "OF", "THESE"];
+
+// transformation -> handle with state
+const studentState: State = [
+  {
+    id: 0,
+    styles: {
+      width: "55vw",
+      height: "400px",
+      left: "5vw",
+      top: "400px",
+    },
+    active: true,
+  },
+  {
+    id: 1,
+    styles: {
+      width: "200px",
+      height: "200px",
+      right: "40vw",
+      top: "190px",
+      transform: "rotate(-1deg)",
+    },
+    active: true,
+  },
 ];
-const programs = [
-  "GRAPHIC DESIGN",
-  "ILLUSTRATION",
-  "PHOTOGRAPHY",
-  "ADVERTISING",
-  "DIGITAL FUTURES",
-  "EXPERIMENTAL ANIMATION",
-  "DRAWING AND PAINTING",
+const resetState: State = [
+  {
+    id: 0,
+    styles: {
+      width: "40vw",
+      height: "105vh",
+      left: "-10px",
+      top: "-10px",
+    },
+    active: true,
+  },
+  {
+    id: 1,
+    styles: {
+      width: "30vw",
+      height: "105vh",
+      right: "-10px",
+      top: "-10px",
+      transform: "rotate(1deg)",
+    },
+    active: true,
+  },
 ];
 
-for (let i = 0; i < 50; i++) {
-  nodes.push({
-    type: randomType(),
-    top: Math.round(Math.random() * window.innerHeight),
-    left: Math.round(Math.random() * window.innerWidth),
-  });
-}
+// Components
 
-for (const x of programs) {
-  nodes.push({
-    type: "Program",
-    top: Math.round(Math.random() * window.innerHeight),
-    left: Math.round(Math.random() * window.innerWidth),
-  });
-}
+// This is the main compoenet, we can pass it our State and it will generate ui based on it
+const Layout: Component<{ state: State }> = (props) => {
+  return (
+    <For each={props.state}>
+      {(boxState) => (
+        <Show when={boxState.active}>
+          <Box state={boxState}>
+            <For each={boxState.children}>{(child) => child}</For>
+          </Box>
+        </Show>
+      )}
+    </For>
+  );
+};
 
-function randomType() {
-  let r = Math.random();
-  if (r < 0.4) return "Student";
-  else return "Project";
-}
-
-const App: Component = () => {
-  const [open, setOpen] = createSignal(true);
-  let [showStudents, setShowStudents] = createSignal(false);
-  let [studentName, setStudentName] = createSignal("");
-  let [showStudent, setShowStudent] = createSignal(false);
-
-  let [boxStyle, setBoxStyle] = createSignal({
-    top: "0vh",
-    right: "0",
-    width: "30vw",
-    height: "105vh",
-  });
-
-  let [leftBoxStyle, setLeftBoxStyle] = createSignal({
-    top: "-10px",
-    left: "-10px",
-    width: "40vw",
-    height: "105vh",
-  });
-
-  let [compiled, setCompiled] = createSignal("");
-  let [compiledRight, setLeftCompiled] = createSignal("");
-
+// This is the Box component Layout will use to make stuff, it takes in the styles and renders it
+// it has a createEffect hook so it will re render whenever we change the state
+const Box: ParentComponent<{ state: Box }> = (props) => {
+  const [styleString, setStyleString] = createSignal("");
   createEffect(() => {
-    if (open()) {
-      setLeftBoxStyle((current) => {
-        console.log(current);
-        current.top = "0px";
-        return current;
-      });
-    } else {
-      setLeftBoxStyle((current) => {
-        current.top = "90vh";
-        return current;
-      });
-    }
-    compileStyles(leftBoxStyle, setLeftCompiled);
+    setStyleString(styleToString(props.state.styles));
   });
-  createEffect(() => {
-    if (open()) {
-      setBoxStyle((current) => {
-        console.log(current);
-        current.top = "0px";
-        return current;
-      });
-    } else {
-      setBoxStyle((current) => {
-        current.top = "90vh";
-        return current;
-      });
-    }
-    compileStyles(boxStyle, setCompiled);
-  });
-
-  function compileStyles(object, destination) {
-    let style = ``;
-    for (const [key, value] of Object.entries(object())) {
-      style += `${key}:${value};`;
-    }
-    destination(style);
-  }
-
-  let rightDestination = {
-    width: "200px",
-    height: "200px",
-    left: "",
-  };
-  function slideOut() {
-    setOpen(!open());
-    setLeftBoxStyle((c) => {
-      c.top = "-10px";
-      c.left = "-30vw";
-      return c;
-    });
-    compileStyles(leftBoxStyle, setLeftCompiled);
-
-    setBoxStyle((c) => {
-      c.top = "-10px";
-      c.right = "-20vw";
-      return c;
-    });
-    compileStyles(boxStyle, setCompiled);
-  }
-
-  function slideIn() {
-    setOpen(!open());
-    setLeftBoxStyle((c) => {
-      c.top = "-10px";
-      c.left = "-10px";
-      return c;
-    });
-    compileStyles(leftBoxStyle, setLeftCompiled);
-
-    setBoxStyle((c) => {
-      c.top = "-10px";
-      c.right = "0";
-      return c;
-    });
-    compileStyles(boxStyle, setCompiled);
-  }
-  function transform_right() {
-    setBoxStyle((c) => {
-      c.width = "200px";
-      c.height = "200px";
-      c.right = "40vw";
-      c.top = "190px";
-      c.transform = "rotate(-1deg)";
-      return c;
-    });
-    compileStyles(boxStyle, setCompiled);
-  }
-  function transform_left() {
-    setLeftBoxStyle((c) => {
-      c.width = "55vw";
-      c.height = "400px";
-      c.left = "5vw";
-      c.top = "400px";
-      return c;
-    });
-    compileStyles(leftBoxStyle, setLeftCompiled);
-  }
-
   return (
     <>
-      <div class="container">
-        <div
-          class="back"
-          onClick={() => {
-            if (!showStudent() && open()) {
-              slideOut();
-            } else if (!showStudent() && !open()) {
-              slideIn();
-            }
-          }}
-        >
-          <For each={nodes}>{(n) => <Node node={n}></Node>}</For>
-        </div>
-        <Box styles={compiledRight}>
-          <Switch>
-            <Match when={!showStudent()}>
-              <div class="menu">
-                <div class="circle"></div>
-                <div class="circle"></div>
-                <div class="circle"></div>
-                <div class="circle"></div>
-                <div class="circle"></div>
-                <span
-                  class="close"
-                  onClick={() => {
-                    setOpen(!open());
-                  }}
-                >
-                  <Switch>
-                    <Match when={open()}>&mdash;</Match>
-                    <Match when={!open()}>+</Match>
-                  </Switch>
-                </span>
-              </div>
-              <div class="programs">
-                <For each={programs}>
-                  {(program) => (
-                    <span
-                      class="program-span"
-                      onClick={() => setShowStudents(true)}
-                    >
-                      {program}/{" "}
-                    </span>
-                  )}
-                </For>
-              </div>
-            </Match>
-
-            <Match when={showStudent()}>
-              <div class="gallery">
-                <For each={images}>
-                  {(image) => (
-                    <img src={image} style="height: 90%; margin: 0 20px;"></img>
-                  )}
-                </For>
-              </div>
-            </Match>
-          </Switch>
-        </Box>
-
-        <Box styles={compiled}>
-          <Switch>
-            <Match when={showStudents()}>
-              <div class="name-wrapper">
-                <For each={studentNames}>
-                  {(name) => (
-                    <p
-                      onClick={() => {
-                        transform_left();
-                        transform_right();
-                        setStudentName(name);
-                        setShowStudents(false);
-                        setShowStudent(true);
-                      }}
-                    >
-                      {name}
-                    </p>
-                  )}
-                </For>
-              </div>
-            </Match>
-            <Match when={showStudent()}>
-              <div class="name-title">
-                <p>{studentName()}</p>
-              </div>
-            </Match>
-          </Switch>
-        </Box>
-      </div>
-      <div class="student"></div>
+      <div style={styleString()}>{props.children}</div>
     </>
+  );
+};
+
+// Menu is the top circles and +- component
+const Menu: Component<{
+  setOpen: Function;
+  open: Function;
+  transfrom: Function;
+}> = (props) => {
+  return (
+    <>
+      <Show when={!transfrom()}>
+        <div class="menu">
+          <div class="circle"></div>
+          <div class="circle"></div>
+          <div class="circle"></div>
+          <div class="circle"></div>
+          <div class="circle"></div>
+          <span
+            class="close"
+            onClick={() => {
+              props.setOpen(!props.open());
+            }}
+          >
+            <Switch>
+              <Match when={props.open()}>&mdash;</Match>
+              <Match when={!props.open()}>+</Match>
+            </Switch>
+          </span>
+        </div>
+      </Show>
+    </>
+  );
+};
+
+// Program list, using this to test, if you click itll toggle views
+const Programs: Component<{
+  setTransform: Function;
+  transfrom: Function;
+}> = (props) => {
+  return (
+    <div class="programs">
+      <Switch>
+        <Match when={!transfrom()}>
+          <For each={programs}>
+            {(program) => (
+              <span
+                class="program-span"
+                onClick={() => props.setTransform(!transfrom())}
+              >
+                {program}/{" "}
+              </span>
+            )}
+          </For>
+        </Match>
+        <Match when={transfrom()}>
+          <span
+            class="program-span"
+            onClick={() => props.setTransform(!transfrom())}
+          >
+            Go Back
+          </span>
+        </Match>
+      </Switch>
+    </div>
+  );
+};
+
+// trigger variables
+// open tracks if the panels are in or out
+const [open, setOpen] = createSignal(true);
+// open tracks if the panels are in or out
+const [transfrom, setTransform] = createSignal(false);
+
+const state = createMutable<State>([
+  {
+    id: 0,
+    styles: {
+      position: "absolute",
+      backgroundColor: "white",
+      overflowY: "scroll",
+      transform: "rotate(1deg)",
+      transition: "all 200ms ease-in-out",
+      top: "-10px",
+      left: "-10px",
+      width: "40vw",
+      height: "105vh",
+    },
+    children: [
+      <Menu setOpen={setOpen} open={open} transfrom={transfrom}></Menu>,
+      <Programs setTransform={setTransform} transfrom={transfrom}></Programs>,
+    ],
+    active: true,
+  },
+  {
+    id: 1,
+    styles: {
+      position: "absolute",
+      backgroundColor: "white",
+      overflowY: "scroll",
+      transform: "rotate(1deg)",
+      transition: "all 200ms ease-in-out",
+      top: "0vh",
+      right: "0",
+      width: "30vw",
+      height: "105vh",
+    },
+    active: true,
+  },
+]);
+
+// triggers
+const slideOut = () => {
+  quickUpdate(0, [
+    ["top", "-10px"],
+    ["left", "-30vw"],
+  ]);
+  quickUpdate(1, [
+    ["top", "-10px"],
+    ["right", "-20vw"],
+  ]);
+};
+
+const slideIn = () => {
+  quickUpdate(0, [
+    ["top", "-10px"],
+    ["left", "-10px"],
+  ]);
+  quickUpdate(1, [
+    ["top", "-10px"],
+    ["right", "0"],
+  ]);
+};
+
+createEffect(() => {
+  if (open()) slideIn();
+  else slideOut();
+});
+
+// Helpers
+type UpdateProp = [index: number, styles: Styles, children?: any[]];
+function updateMultiple(updates: UpdateProp[]) {
+  for (const x of updates) updateState(...x);
+}
+function updateState(index: number, styles: Styles, children?: any[]) {
+  for (const [key, value] of Object.entries(styles)) {
+    if (value === "RESET") state[index].styles = {};
+    else if (value === "DELETE" && state[index].styles[key])
+      delete state[index].styles[key];
+    else state[index].styles[key] = value;
+  }
+  if (children) state[index].children = children;
+}
+
+function quickUpdate(index: number | number[], style: string[][]) {
+  if (typeof index === "number") {
+    for (const x of style) {
+      state[index].styles[x[0]] = x[1];
+    }
+  } else
+    for (const i of index) {
+      for (const x of style) {
+        state[i].styles[x[0]] = x[1];
+      }
+    }
+}
+
+function styleToString(styles: Object) {
+  // helper function
+  const kebabize = (str: string) => {
+    return str
+      .split("")
+      .map((letter: string, idx: number) => {
+        return letter.toUpperCase() === letter
+          ? `${idx !== 0 ? "-" : ""}${letter.toLowerCase()}`
+          : letter;
+      })
+      .join("");
+  };
+
+  let swap = "";
+  for (const [key, value] of Object.entries(styles)) {
+    swap += `${kebabize(key)}: ${value};`;
+  }
+  return swap;
+}
+
+createEffect(() => {
+  if (transfrom()) {
+    updateMultiple([
+      [0, studentState[0].styles],
+      [1, studentState[1].styles],
+    ]);
+  } else {
+    updateMultiple([
+      [0, resetState[0].styles],
+      [1, resetState[1].styles],
+    ]);
+  }
+});
+
+const App: Component = () => {
+  return (
+    <div class="container">
+      <Back></Back>
+      <Layout state={state}></Layout>
+    </div>
   );
 };
 
