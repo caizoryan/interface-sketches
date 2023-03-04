@@ -1,23 +1,8 @@
-import {
-  Switch,
-  Match,
-  createMemo,
-  Component,
-  createSignal,
-  For,
-  createEffect,
-} from "solid-js";
+import { createSignal, For, createEffect, ParentComponent } from "solid-js";
+import type { Component } from "solid-js/types";
 import { render } from "solid-js/web";
 import { createMutable } from "solid-js/store";
 import "./styles.css";
-
-type Box = {
-  id: number;
-  styles: Object;
-  children: any[];
-  active: Boolean;
-};
-
 const s = {
   state1: {
     index: 0,
@@ -44,7 +29,6 @@ const s = {
       left: "10px",
       width: "400px",
       height: "300px",
-      filter: "blur(4px)",
     },
   },
   state4: {
@@ -58,9 +42,17 @@ const s = {
   },
 };
 
-const ProgramList = (programs: (string | Function)[]) => {
+type Box = {
+  id: number;
+  styles: Object;
+  children: any[];
+  active: Boolean;
+};
+
+const ProgramList: Component<{ programs: (string | Function)[] }> = (props) => {
+  console.log("ok");
   return (
-    <For each={programs}>
+    <For each={props.programs}>
       {(program) => <p>{typeof program === "string" ? program : program()}</p>}
     </For>
   );
@@ -74,7 +66,8 @@ const Menu = () => {
   );
 };
 
-const state = createMutable<Box[]>([
+type State = Box[];
+const state = createMutable<State>([
   {
     id: 0,
     styles: {
@@ -86,22 +79,55 @@ const state = createMutable<Box[]>([
       color: "white",
       transition: "300ms ease-in-out all",
     },
-    children: [ProgramList(["Design", "Illustration"])],
+    children: [
+      <ProgramList programs={["Design", "Illustration"]}></ProgramList>,
+    ],
+    active: true,
+  },
+  {
+    id: 1,
+    styles: {
+      position: "fixed",
+      top: "300px",
+      left: "400px",
+      width: "100px",
+      height: "100px",
+      color: "red",
+      transition: "300ms ease-in-out all",
+    },
+    children: [
+      <ProgramList programs={["Design", "Illustration"]}></ProgramList>,
+      <Menu></Menu>,
+    ],
     active: true,
   },
 ]);
 
-function applyStates(index: number, styles: Object, children?: Function[]) {
+const Layout: Component<{ state: State }> = (props) => {
+  return (
+    <For each={props.state}>
+      {(boxState) => (
+        <Box state={boxState}>
+          <For each={boxState.children}>{(child) => child}</For>
+        </Box>
+      )}
+    </For>
+  );
+};
+
+function applyStates(index: number, styles: Object, children?: any[]) {
   for (const [key, value] of Object.entries(styles)) {
-    if (value === "DELETE") delete state[index].styles[key];
+    if (value === "DELETE" && state[index].styles[key])
+      delete state[index].styles[key];
     else state[index].styles[key] = value;
   }
 
   if (children) state[index].children = children;
 }
 
-function compileCss(styles: Object) {
+function styleToString(styles: Object) {
   // TODO add a camel case to kebab case converter
+  // To add for example background-color
   let swap = "";
   for (const [key, value] of Object.entries(styles)) {
     swap += `${key}: ${value};`;
@@ -109,30 +135,28 @@ function compileCss(styles: Object) {
   return swap;
 }
 
-const Box: Component = (props: any) => {
-  const [compiledStyles, setCompiledStyles] = createSignal("");
+const Box: ParentComponent<{ state: Box }> = (props) => {
+  const [styleString, setStyleString] = createSignal("");
   createEffect(() => {
-    setCompiledStyles(compileCss(props.state.styles));
+    setStyleString(styleToString(props.state.styles));
   });
   return (
     <>
-      <div style={compiledStyles() + "background-color: black"}>
+      <div style={styleString() + "background-color: black"}>
         {props.children}
       </div>
     </>
   );
 };
 
-createEffect(() => {
-  console.log(state[0].styles);
-});
+const [some, setSome] = createSignal("Wowiee");
 const Buttons: Component = () => {
   return (
     <>
       <button
         onClick={() =>
           applyStates(0, s.state1.styles, [
-            ProgramList(["Graphic Design, Illustration"]),
+            <ProgramList programs={["a", "ok"]}></ProgramList>,
           ])
         }
       >
@@ -141,8 +165,18 @@ const Buttons: Component = () => {
       <button onClick={() => applyStates(0, s.state2.styles, [Menu])}>
         State 2
       </button>
-      <button onClick={() => applyStates(0, s.state3.styles)}> State 3 </button>
+      <button
+        onClick={() =>
+          applyStates(0, s.state3.styles, [
+            ProgramList({ programs: ["Something else", some] }),
+          ])
+        }
+      >
+        {" "}
+        State 3{" "}
+      </button>
       <button onClick={() => applyStates(0, s.state4.styles)}> State 4 </button>
+      <button onClick={() => setSome("YUHHH")}> YUHHH on state 3 </button>
     </>
   );
 };
@@ -151,7 +185,7 @@ const App: Component = () => {
   return (
     <div class="container">
       <Buttons></Buttons>
-      <Box state={state[0]}>{state[0].children[0]}</Box>
+      <Layout state={state}></Layout>
     </div>
   );
 };
