@@ -1,6 +1,6 @@
 import { For, Component } from "solid-js";
+import { Layout } from "./Layout";
 import "./styles.css";
-import Node from "./Node";
 
 const programs = [
   "GRAPHIC DESIGN",
@@ -11,35 +11,26 @@ const programs = [
   "DRAWING AND PAINTING",
 ];
 
-const nodes: any[] = [];
-for (let i = 0; i < 50; i++) {
-  nodes.push({
-    type: randomType(),
-    top: Math.round(Math.random() * window.innerHeight),
-    left: Math.round(Math.random() * window.innerWidth),
-  });
-}
+const state = [
+  {
+    id: 0,
+    styles: {
+      top: "0",
+      position: "fixed",
+      left: "0px",
+      width: "100vw",
+      height: "100vh",
+      backgroundColor: "rgb(10, 10, 10)",
+    },
+    active: true,
+  },
+];
 
-for (const x of programs) {
-  nodes.push({
-    type: "Program",
-    top: Math.round(Math.random() * window.innerHeight),
-    left: Math.round(Math.random() * window.innerWidth),
-  });
-}
-
-function randomType() {
-  let r = Math.random();
-  if (r < 0.4) return "Student";
-  else return "Project";
-}
-
+const Node: Component = () => {
+  return <div style=""></div>;
+};
 const Back: Component = () => {
-  return (
-    <div class="back">
-      <For each={nodes}>{(n) => <Node node={n}></Node>}</For>
-    </div>
-  );
+  return <Layout state={state}></Layout>;
 };
 
 export default Back;

@@ -1,56 +1,13 @@
-import {
-  Switch,
-  Match,
-  Show,
-  Component,
-  ParentComponent,
-  createSignal,
-  For,
-  createEffect,
-} from "solid-js";
-import { createMutable } from "solid-js/store";
+import { createEffect, Component } from "solid-js";
 import Back from "./Back";
+import { Layout } from "./Layout";
 import { render } from "solid-js/web";
 import "./styles.css";
-import {
-  open,
-  transform,
-  styleToString,
-  updateMultiple,
-  quickUpdate,
-  state,
-} from "./State";
+import { open, transform, updateMultiple, quickUpdate, state } from "./State";
 
-// types
-type Styles = {
-  [key: string]: string;
-};
-type Box = {
-  id: number;
-  styles: Styles;
-  children?: any[];
-  active: Boolean;
-};
-
-type State = Box[];
+import type { State } from "./Types";
 
 // annoying variables
-const studentNames = [
-  "Wolfgang Weingart",
-  "Hans Richter",
-  "Claude Garamond",
-  "Jan Tschichold",
-  "William Golden",
-  "Jacqueline Casey",
-  "Cipe Pineles",
-  "Susan Kare",
-  "Abram Games",
-  "Armin Hofmann",
-  "Josef Muller-Brockmann",
-  "Seymour Chwast",
-  "Alexey Brodovitch",
-  "Herb Lubalin",
-];
 const programs = ["CLICK", "ON", "ONE", "OF", "THESE"];
 
 // transformation -> handle with state
@@ -102,35 +59,6 @@ const resetState: State = [
 ];
 
 // Components
-
-// This is the main compoenet, we can pass it our State and it will generate ui based on it
-const Layout: Component<{ state: State }> = (props) => {
-  return (
-    <For each={props.state}>
-      {(boxState) => (
-        <Show when={boxState.active}>
-          <Box state={boxState}>
-            <For each={boxState.children}>{(child) => child}</For>
-          </Box>
-        </Show>
-      )}
-    </For>
-  );
-};
-
-// This is the Box component Layout will use to make stuff, it takes in the styles and renders it
-// it has a createEffect hook so it will re render whenever we change the state
-const Box: ParentComponent<{ state: Box }> = (props) => {
-  const [styleString, setStyleString] = createSignal("");
-  createEffect(() => {
-    setStyleString(styleToString(props.state.styles));
-  });
-  return (
-    <>
-      <div style={styleString()}>{props.children}</div>
-    </>
-  );
-};
 
 // triggers
 const slideOut = () => {

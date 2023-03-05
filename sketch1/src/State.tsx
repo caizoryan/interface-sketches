@@ -2,18 +2,8 @@ import { Programs, Menu } from "./ChildComponents";
 import { createSignal } from "solid-js";
 import { createMutable } from "solid-js/store";
 import "./styles.css";
+import type { State, Styles } from "./Types";
 
-type Styles = {
-  [key: string]: string;
-};
-type Box = {
-  id: number;
-  styles: Styles;
-  children?: any[];
-  active: Boolean;
-};
-
-type State = Box[];
 type UpdateProp = [index: number, styles: Styles, children?: any[]];
 
 // trigger variables
