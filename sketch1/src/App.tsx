@@ -38,44 +38,6 @@ const studentState: State = [
   },
 ];
 
-const testState: State = [
-  {
-    id: 0,
-    styles: {
-      width: "15vw",
-      height: "100px",
-      left: "5vw",
-      top: "400px",
-    },
-    active: true,
-  },
-  {
-    id: 1,
-    styles: {
-      width: "20px",
-      height: "20px",
-      right: "40vw",
-      top: "190px",
-      transform: "rotate(-1deg)",
-    },
-    active: true,
-  },
-  {
-    id: 2,
-    styles: {
-      position: "fixed",
-      backgroundColor: "red",
-      width: "100px",
-      height: "100px",
-      right: "80vw",
-      top: "190px",
-      opacity: "0",
-      transition: "all 400ms ease",
-      transform: "rotate(-1deg)",
-    },
-    active: true,
-  },
-];
 // store states in arrays
 const resetState: State = [
   {
@@ -131,7 +93,7 @@ createEffect(() => {
 
 // update states for multiple Components
 createEffect(() => {
-  if (transform()) transformState(testState);
+  if (transform()) transformState(studentState);
   else transformState(resetState);
 });
 
