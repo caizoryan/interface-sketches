@@ -1,14 +1,17 @@
-import { createEffect, Component } from "solid-js";
+import { createEffect, createSignal, Component } from "solid-js";
 import Back from "./Back";
-import { Layout } from "./Layout";
+import { Layout } from "./Generator/Layout";
 import { render } from "solid-js/web";
+import { state } from "./State";
+import { updateChildren, transformState, quickUpdate } from "./Generator/Utils";
 import "./styles.css";
-import { open, transform, updateMultiple, quickUpdate, state } from "./State";
 
-import type { State } from "./Types";
+import type { State } from "./Generator/Types";
 
-// annoying variables
-const programs = ["CLICK", "ON", "ONE", "OF", "THESE"];
+// open tracks if the panels are in or out
+const [open, setOpen] = createSignal(true);
+// open tracks if the panels are in or out
+const [transform, setTransform] = createSignal(false);
 
 // transformation -> handle with state
 const studentState: State = [
@@ -34,6 +37,31 @@ const studentState: State = [
     active: true,
   },
 ];
+
+const testState: State = [
+  {
+    id: 0,
+    styles: {
+      width: "15vw",
+      height: "100px",
+      left: "5vw",
+      top: "400px",
+    },
+    active: true,
+  },
+  {
+    id: 1,
+    styles: {
+      width: "20px",
+      height: "20px",
+      right: "40vw",
+      top: "190px",
+      transform: "rotate(-1deg)",
+    },
+    active: true,
+  },
+];
+// store states in arrays
 const resetState: State = [
   {
     id: 0,
@@ -58,9 +86,7 @@ const resetState: State = [
   },
 ];
 
-// Components
-
-// triggers
+// Quick update by passing index and 2 dimensional array of [property, values]
 const slideOut = () => {
   quickUpdate(0, [
     ["top", "-10px"],
@@ -88,25 +114,28 @@ createEffect(() => {
   else slideOut();
 });
 
-// Helpers
+// update states for multiple Components
 createEffect(() => {
-  if (transform()) {
-    updateMultiple([
-      [0, studentState[0].styles],
-      [1, studentState[1].styles],
-    ]);
-  } else {
-    updateMultiple([
-      [0, resetState[0].styles],
-      [1, resetState[1].styles],
-    ]);
-  }
+  if (transform()) transformState(testState);
+  else transformState(resetState);
 });
+
+// Update children in Component
+const Child = () => {
+  return (
+    <div
+      onClick={() => setTransform(!transform())}
+      style="position: fixed; top: 0; left: 0; width: 100%; height: 100%"
+    ></div>
+  );
+};
+updateChildren(0, [<Child></Child>]);
+updateChildren(1, [<Child></Child>]);
 
 const App: Component = () => {
   return (
     <div class="container">
-      <Back></Back>
+      <Back setOpen={setOpen} open={open}></Back>
       <Layout state={state}></Layout>
     </div>
   );

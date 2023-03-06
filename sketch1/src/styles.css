@@ -18,6 +18,9 @@
     url("./ABC Monument Grotesk Mono/ABCMonumentGroteskMono-Regular-Trial.woff2")
       format("woff2");
 }
+body {
+  overflow: hidden;
+}
 
 .container {
   display: flex;

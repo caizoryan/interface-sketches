@@ -6,7 +6,7 @@ import {
   createEffect,
   createSignal,
 } from "solid-js";
-import { styleToString } from "./State";
+import { styleToString } from "./Utils";
 import type { State, Box } from "./Types";
 
 // This is the main compoenet, we can pass it our State and it will generate ui based on it
