@@ -60,6 +60,21 @@ const testState: State = [
     },
     active: true,
   },
+  {
+    id: 2,
+    styles: {
+      position: "fixed",
+      backgroundColor: "red",
+      width: "100px",
+      height: "100px",
+      right: "80vw",
+      top: "190px",
+      opacity: "0",
+      transition: "all 400ms ease",
+      transform: "rotate(-1deg)",
+    },
+    active: true,
+  },
 ];
 // store states in arrays
 const resetState: State = [

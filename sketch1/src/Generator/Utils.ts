@@ -2,13 +2,6 @@ import { state } from "../State";
 import "../styles.css";
 import type { Styles, State } from "./Types";
 
-type UpdateProp = [
-  index: number,
-  styles: Styles,
-  children?: any[],
-  cls?: string
-];
-
 function transformState(newState: State) {
   updateMultiple(newState);
   for (const x of state) x.active = true;
@@ -32,14 +25,33 @@ function updateState(
   children?: any[],
   cls?: string
 ) {
-  for (const [key, value] of Object.entries(styles)) {
-    if (value === "RESET") state[index].styles = {};
-    else if (value === "DELETE" && state[index].styles[key])
-      delete state[index].styles[key];
-    else state[index].styles[key] = value;
+  if (state[index]) {
+    for (const [key, value] of Object.entries(styles)) {
+      if (value === "RESET") state[index].styles = {};
+      else if (value === "DELETE" && state[index].styles[key])
+        delete state[index].styles[key];
+      else state[index].styles[key] = value;
+    }
+    if (children) state[index].children = children;
+    if (cls) state[index].class = cls;
+  } else {
+    if (cls)
+      state.push({
+        id: index,
+        styles: styles,
+        active: true,
+        children: children,
+        class: cls,
+      });
+    else if (children)
+      state.push({
+        id: index,
+        styles: styles,
+        active: true,
+        children: children,
+      });
+    else state.push({ id: index, styles: styles, active: true });
   }
-  if (children) state[index].children = children;
-  if (cls) state[index].class = cls;
 }
 
 function updateChildren(index: number, children: any[]) {
