@@ -1,6 +1,8 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@timohausmann/quadtree-js': ^1.2.5
+  '@timohausmann/quadtree-ts': ^2.0.0-beta.1
   solid-js: ^1.6.10
   typescript: ^4.9.5
   vite: ^4.1.1
@@ -10,6 +12,8 @@ dependencies:
   solid-js: 1.6.10
 
 devDependencies:
+  '@timohausmann/quadtree-js': 1.2.5
+  '@timohausmann/quadtree-ts': 2.0.0-beta.1
   typescript: 4.9.5
   vite: 4.1.1
   vite-plugin-solid: 2.5.0_solid-js@1.6.10+vite@4.1.1
@@ -565,6 +569,14 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
+    dev: true
+
+  /@timohausmann/quadtree-js/1.2.5:
+    resolution: {integrity: sha512-WcH3pouYtpyLjTCRvNP0WuSV4m7mRyYhLzW44egveFryT7pJhpDsdIJASEe37iCFNA0vmEpqTYGoG0siyXEthA==}
+    dev: true
+
+  /@timohausmann/quadtree-ts/2.0.0-beta.1:
+    resolution: {integrity: sha512-zq8AnO1qoYM66OXkiC9d5wIIvNeHy3XIA0AwPtGRNkmX0uv9aktyyBRWzqPW/dZWMMkG4uLluer38QJc+QV/5w==}
     dev: true
 
   /ansi-styles/3.2.1:
