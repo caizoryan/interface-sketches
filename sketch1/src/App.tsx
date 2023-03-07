@@ -171,7 +171,7 @@ const ProgramList: Component<{ programs: string[]; onClick: Function }> = (
                 setSelected(program);
               }}
             >
-              {program}/{" "}
+              {program}/
             </p>
           );
         }}

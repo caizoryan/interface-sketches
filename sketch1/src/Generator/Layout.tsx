@@ -10,7 +10,7 @@ import { styleToString } from "./Utils";
 import type { State, Box } from "./Types";
 
 // This is the main compoenet, we can pass it our State and it will generate ui based on it
-const Layout: Component<{ state: State }> = (props) => {
+const Layout: Component<{ state: State; onClick?: Function }> = (props) => {
   return (
     <For each={props.state}>
       {(boxState) => (
