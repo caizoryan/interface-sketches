@@ -1,13 +1,38 @@
-import { createEffect, createSignal, Component } from "solid-js";
+import { createEffect, createSignal, For, Component } from "solid-js";
 import Back from "./Back";
 import { Layout } from "./Generator/Layout";
 import { render } from "solid-js/web";
 import { state } from "./State";
-import { updateChildren, transformState, quickUpdate } from "./Generator/Utils";
+import {
+  updateChildren,
+  transformState,
+  quickUpdate,
+  updateState,
+} from "./Generator/Utils";
 import "./styles.css";
 
 import type { State } from "./Generator/Types";
 
+const programs = [
+  "GRAPHIC DESIGN",
+  "ILLUSTRATION",
+  "PHOTOGRAPHY",
+  "DIGITAL FUTURES",
+  "EXPERIMENTAL ANIMATION",
+  "DRAWING AND PAINTING",
+];
+const students = [
+  "Roberto Stuart",
+  "Abrianna Kim",
+  "Yasmin Cowan",
+  "Bianca Post",
+  "Jacoby Ralston",
+  "Richard Chung",
+  "Lourdes Starnes",
+  "Gloria Kirchner",
+  "Nina Doherty",
+  "Raina Olivas",
+];
 // open tracks if the panels are in or out
 const [open, setOpen] = createSignal(true);
 // open tracks if the panels are in or out
@@ -28,10 +53,6 @@ const studentState: State = [
   {
     id: 1,
     styles: {
-      width: "200px",
-      height: "200px",
-      right: "40vw",
-      top: "190px",
       transform: "rotate(-1deg)",
     },
     active: true,
@@ -43,21 +64,30 @@ const resetState: State = [
   {
     id: 0,
     styles: {
-      width: "40vw",
-      height: "105vh",
-      left: "-10px",
+      position: "absolute",
+      backgroundColor: "white",
+      overflowY: "scroll",
+      transform: "rotate(1deg)",
+      transition: "all 400ms ease-in-out",
       top: "-10px",
+      left: "-10px",
+      width: "50vw",
+      height: "105vh",
     },
     active: true,
   },
   {
     id: 1,
     styles: {
+      position: "absolute",
+      backgroundColor: "white",
+      overflowY: "scroll",
+      transform: "rotate(1deg)",
+      transition: "all 400ms ease-in-out",
+      top: "0vh",
+      right: "0",
       width: "30vw",
       height: "105vh",
-      right: "-10px",
-      top: "-10px",
-      transform: "rotate(1deg)",
     },
     active: true,
   },
@@ -97,6 +127,58 @@ createEffect(() => {
   else transformState(resetState);
 });
 
+const StudentNames: Component<{ program: string; students: string[] }> = (
+  props
+) => {
+  return (
+    <>
+      <h1 class="program-heading">{props.program}</h1>
+      <div class="students-container">
+        <For each={props.students}>
+          {(student) => <p class="student-name">{student}</p>}
+        </For>
+      </div>
+    </>
+  );
+};
+
+function showStudents(program: string) {
+  // call database to show students in this
+  updateState(1, {
+    top: "200px",
+    right: "10vw",
+    width: "70vw",
+    height: "50vh",
+    backgroundColor: "rgba(250, 250, 250)",
+  });
+  updateChildren(1, [
+    <StudentNames program={program} students={students}></StudentNames>,
+  ]);
+}
+const ProgramList: Component<{ programs: string[]; onClick: Function }> = (
+  props
+) => {
+  const [selected, setSelected] = createSignal("");
+  return (
+    <div class="program-container">
+      <For each={props.programs}>
+        {(program) => {
+          return (
+            <p
+              class={program === selected() ? "program-selected" : "program"}
+              onClick={() => {
+                props.onClick(program);
+                setSelected(program);
+              }}
+            >
+              {program}/{" "}
+            </p>
+          );
+        }}
+      </For>
+    </div>
+  );
+};
 // Update children in Component
 const Child = () => {
   return (
@@ -106,13 +188,16 @@ const Child = () => {
     ></div>
   );
 };
-updateChildren(0, [<Child></Child>]);
+updateChildren(0, [
+  <Child></Child>,
+  <ProgramList programs={programs} onClick={showStudents}></ProgramList>,
+]);
 updateChildren(1, [<Child></Child>]);
 
 const App: Component = () => {
   return (
     <div class="container">
-      <Back setOpen={setOpen} open={open}></Back>
+      <Back></Back>
       <Layout state={state}></Layout>
     </div>
   );

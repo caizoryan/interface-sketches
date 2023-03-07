@@ -1,9 +1,3 @@
-* {
-  padding: 0;
-  margin: 0;
-  font-family: "Monument-Mono";
-}
-
 @font-face {
   font-family: "Monument-Mono";
   src: url("./ABC Monument Grotesk Mono/ABCMonumentGroteskMono-Light-Trial.woff")
@@ -91,15 +85,25 @@
   --textfont-1: timesdot;
   --textfont-2: frakthin;
 }
+* {
+  padding: 0;
+  margin: 0;
+  font-family: var(--displayfont-2);
+}
+
+h1 {
+  font-family: var(--displayfont-1);
+  font-size: 45px;
+}
+
 body {
-  overflow: scroll;
+  overflow: hidden;
 }
 
 .container {
   display: flex;
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
 }
 
 .back {
@@ -234,6 +238,61 @@ body {
   font-family: var(--textfont-2);
   padding: 10px;
   font-size: 15px;
+}
+
+.program-container {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  bottom: 50px;
+  left: 50px;
+  width: 90%;
+  transform: rotate(-1deg);
+}
+
+.students-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 90%;
+  margin: 5%;
+  margin-bottom: 100px;
+}
+
+.program-heading {
+  margin: 5% 0 0 5%;
+}
+
+.student-name {
+  padding: 20px;
+  margin: 1%;
+  border: 2px solid rgb(20, 20, 20);
+  font-size: 25px;
+  font-family: var(--textfont-2);
+  transition: all 100ms ease-in-out;
+  /* border-radius: 100px; */
+}
+
+.student-name:hover {
+  cursor: pointer;
+  background-color: black;
+  color: white;
+}
+
+.program {
+  font-family: var(--displayfont-1);
+  font-size: 45px;
+}
+.program-selected {
+  font-size: 45px;
+  font-family: var(--displayfont-2);
+  cursor: pointer;
+  background: yellow;
+}
+
+.program:hover {
+  font-family: var(--displayfont-2);
+  cursor: pointer;
+  background: yellow;
 }
 /*hovers
 --------------------------------
