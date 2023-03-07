@@ -18,8 +18,81 @@
     url("./ABC Monument Grotesk Mono/ABCMonumentGroteskMono-Regular-Trial.woff2")
       format("woff2");
 }
+@font-face {
+  font-family: "HealA";
+  src: url("../public/HealTheWeb/healtheweba-regular-webfont.woff2")
+      format("woff2"),
+    url("../public/HealTheWeb/healtheweba-regular-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "HealB";
+  src: url("../public/HealTheWeb/healthewebb-regular-webfont.woff2")
+      format("woff2"),
+    url("../public/HealTheWeb/healthewebb-regular-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "timesdot";
+  src: url("../public/Times-Dot/timesdotrom-webfont.woff2") format("woff2"),
+    url("../public/Times-Dot/timesdotrom-webfont.woff") format("woff");
+  font-style: normal;
+  font-weight: normal;
+}
+@font-face {
+  font-family: "timesdot";
+  src: url("../public/Times-Dot/timesdotbol-webfont.woff2") format("woff2"),
+    url("../public/Times-Dot/timesdotbol-webfont.woff") format("woff");
+  font-style: normal;
+  font-weight: bold;
+}
+@font-face {
+  font-family: "timesdot";
+  src: url("../public/Times-Dot/times_dot-italic-webfont.woff2") format("woff2"),
+    url("../public/Times-Dot/times_dot-italic-webfont.woff") format("woff");
+  font-style: italic;
+  font-weight: normal;
+}
+@font-face {
+  font-family: "minmax";
+  src: url("../public/Min/Minipax-Regular.woff2") format("woff2"),
+    url("../public/Min/Minipax-Regular.woff") format("woff");
+  font-style: normal;
+  font-weight: normal;
+}
+@font-face {
+  font-family: "frakmono";
+  src: url("../public/Frak/PPFraktionMono-Regular.woff2") format("woff2"),
+    url("../public/Frak/PPFraktionMono-Regular.woff") format("woff");
+  font-style: normal;
+  font-weight: normal;
+}
+@font-face {
+  font-family: "frak";
+  src: url("../public/Frak/PPFraktionSans-Bold.woff2") format("woff2"),
+    url("../public/Frak/PPFraktionSans-Bold.woff") format("woff");
+  font-style: normal;
+  font-weight: normal;
+}
+@font-face {
+  font-family: "frakthin";
+  src: url("../public/Frak/PPFraktionSans-Thin.woff2") format("woff2"),
+    url("../public/Frak/PPFraktionSans-Thin.woff") format("woff");
+  font-style: normal;
+  font-weight: normal;
+}
+:root {
+  --displayfont-1: HealA;
+  --displayfont-2: HealB;
+  --displayfont-3: minmax;
+  --displayfont-4: frak;
+  --textfont-1: timesdot;
+  --textfont-2: frakthin;
+}
 body {
-  overflow: hidden;
+  overflow: scroll;
 }
 
 .container {
@@ -148,4 +221,27 @@ body {
   overflow-y: scroll;
   align-items: center;
   height: 90%;
+}
+.temp {
+  overflow: hidden;
+}
+.title {
+  font-family: var(--displayfont-2);
+  font-size: 60px;
+  opacity: 0;
+}
+.boxtext {
+  font-family: var(--textfont-2);
+  padding: 10px;
+  font-size: 15px;
+}
+/*hovers
+--------------------------------
+--------------------------------
+*/
+.temp:hover {
+  filter: drop-shadow(2px 4px 60px #131194);
+}
+.temp:hover span {
+  opacity: 1;
 }
