@@ -1,4 +1,11 @@
-import { For, Component, Setter, Accessor, enableScheduling } from "solid-js";
+import {
+  For,
+  Component,
+  Setter,
+  createSignal,
+  Accessor,
+  enableScheduling,
+} from "solid-js";
 import { Layout } from "./Generator/Layout";
 import { randBias } from "./Generator/Utils";
 import { createQtGrid } from "./Generator/createQtGrid";
@@ -11,6 +18,7 @@ const Node: Component<{
   height: string;
   s: string;
 }> = (props) => {
+  const [hover, setHover] = createSignal(1);
   return (
     <div
       class="temp"
@@ -19,13 +27,14 @@ const Node: Component<{
       background-color:${props.s}; top: ${props.top}; left: ${props.left}; 
       `}
     >
-      <span style="position:relative;" class="title">
+      <span
+        style={`position:absolute; top: 10px; left: 10px; font-size: 30px; z-index: 100`}
+        class="title"
+        onMouseEnter={() => setHover(90)}
+        onMouseLeave={() => setHover(0)}
+      >
         Amir Nevis
       </span>
-      <p style="position:relative" class="boxtext">
-        Fiverr and TaskRabbit offer access to graphic designers able to create a
-        logo, a website, a poster.
-      </p>
     </div>
   );
 };
