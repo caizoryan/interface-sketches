@@ -1,9 +1,3 @@
-* {
-  padding: 0;
-  margin: 0;
-  font-family: "Monument-Mono";
-}
-
 @font-face {
   font-family: "Monument-Mono";
   src: url("./ABC Monument Grotesk Mono/ABCMonumentGroteskMono-Light-Trial.woff")
@@ -18,6 +12,90 @@
     url("./ABC Monument Grotesk Mono/ABCMonumentGroteskMono-Regular-Trial.woff2")
       format("woff2");
 }
+@font-face {
+  font-family: "HealA";
+  src: url("../public/HealTheWeb/healtheweba-regular-webfont.woff2")
+      format("woff2"),
+    url("../public/HealTheWeb/healtheweba-regular-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "HealB";
+  src: url("../public/HealTheWeb/healthewebb-regular-webfont.woff2")
+      format("woff2"),
+    url("../public/HealTheWeb/healthewebb-regular-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "timesdot";
+  src: url("../public/Times-Dot/timesdotrom-webfont.woff2") format("woff2"),
+    url("../public/Times-Dot/timesdotrom-webfont.woff") format("woff");
+  font-style: normal;
+  font-weight: normal;
+}
+@font-face {
+  font-family: "timesdot";
+  src: url("../public/Times-Dot/timesdotbol-webfont.woff2") format("woff2"),
+    url("../public/Times-Dot/timesdotbol-webfont.woff") format("woff");
+  font-style: normal;
+  font-weight: bold;
+}
+@font-face {
+  font-family: "timesdot";
+  src: url("../public/Times-Dot/times_dot-italic-webfont.woff2") format("woff2"),
+    url("../public/Times-Dot/times_dot-italic-webfont.woff") format("woff");
+  font-style: italic;
+  font-weight: normal;
+}
+@font-face {
+  font-family: "minmax";
+  src: url("../public/Min/Minipax-Regular.woff2") format("woff2"),
+    url("../public/Min/Minipax-Regular.woff") format("woff");
+  font-style: normal;
+  font-weight: normal;
+}
+@font-face {
+  font-family: "frakmono";
+  src: url("../public/Frak/PPFraktionMono-Regular.woff2") format("woff2"),
+    url("../public/Frak/PPFraktionMono-Regular.woff") format("woff");
+  font-style: normal;
+  font-weight: normal;
+}
+@font-face {
+  font-family: "frak";
+  src: url("../public/Frak/PPFraktionSans-Bold.woff2") format("woff2"),
+    url("../public/Frak/PPFraktionSans-Bold.woff") format("woff");
+  font-style: normal;
+  font-weight: normal;
+}
+@font-face {
+  font-family: "frakthin";
+  src: url("../public/Frak/PPFraktionSans-Thin.woff2") format("woff2"),
+    url("../public/Frak/PPFraktionSans-Thin.woff") format("woff");
+  font-style: normal;
+  font-weight: normal;
+}
+:root {
+  --displayfont-1: HealA;
+  --displayfont-2: HealB;
+  --displayfont-3: minmax;
+  --displayfont-4: frak;
+  --textfont-1: timesdot;
+  --textfont-2: frakthin;
+}
+* {
+  padding: 0;
+  margin: 0;
+  font-family: var(--displayfont-2);
+}
+
+h1 {
+  font-family: var(--displayfont-1);
+  font-size: 45px;
+}
+
 body {
   overflow: hidden;
 }
@@ -26,7 +104,6 @@ body {
   display: flex;
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
 }
 
 .back {
@@ -148,4 +225,82 @@ body {
   overflow-y: scroll;
   align-items: center;
   height: 90%;
+}
+.temp {
+  overflow: hidden;
+}
+.title {
+  font-family: var(--displayfont-2);
+  font-size: 60px;
+  opacity: 0;
+}
+.boxtext {
+  font-family: var(--textfont-2);
+  padding: 10px;
+  font-size: 15px;
+}
+
+.program-container {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  bottom: 50px;
+  left: 50px;
+  width: 90%;
+  transform: rotate(-1deg);
+}
+
+.students-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 90%;
+  margin: 5%;
+  margin-bottom: 100px;
+}
+
+.program-heading {
+  margin: 5% 0 0 5%;
+}
+
+.student-name {
+  padding: 20px;
+  margin: 1%;
+  border: 2px solid rgb(20, 20, 20);
+  font-size: 25px;
+  font-family: var(--textfont-2);
+  transition: all 100ms ease-in-out;
+  /* border-radius: 100px; */
+}
+
+.student-name:hover {
+  cursor: pointer;
+  background-color: black;
+  color: white;
+}
+
+.program {
+  font-family: var(--displayfont-1);
+  font-size: 45px;
+}
+.program-selected {
+  font-size: 45px;
+  font-family: var(--displayfont-2);
+  cursor: pointer;
+  background: yellow;
+}
+
+.program:hover {
+  font-family: var(--displayfont-2);
+  cursor: pointer;
+  background: yellow;
+}
+/*hovers
+--------------------------------
+--------------------------------
+*/
+.temp:hover {
+  filter: drop-shadow(2px 4px 60px #131194);
+}
+.temp:hover span {
+  opacity: 1;
 }

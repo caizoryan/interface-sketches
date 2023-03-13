@@ -90,6 +90,16 @@ function styleToString(styles: Object) {
   }
   return swap;
 }
+function randBias(
+  min: number,
+  max: number,
+  bias: number,
+  influence = 0.5
+): number {
+  const base = Math.random() * (max - min) + min;
+  const mix = Math.random() * influence;
+  return base * (1 - mix) + bias * mix;
+}
 export {
   updateChildren,
   updateMultiple,
@@ -97,4 +107,5 @@ export {
   quickUpdate,
   updateState,
   transformState,
+  randBias,
 };
